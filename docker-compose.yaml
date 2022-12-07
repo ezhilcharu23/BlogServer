@@ -1,0 +1,28 @@
+version: '3'
+services:
+  apps:
+    image: docker.io/ezhilcharu/apps
+    ports:
+    - 8761
+  server4:
+    image: docker.io/ezhilcharu/server4
+    environment:
+    - eureka.client.service-url.defaultZone=http://myserver:8761/eureka/
+    - eureka.instance.prefer-ip-address=true
+    - spring.datasource.url=jdbc:mysql://<rds link>:3306/mydatabase
+    - spring.datasource.username=root
+    - spring.datasource.password=rootroot
+    ports:
+    - 8085
+    depends_on:
+    - apps
+  clienttwo4:
+    image: docker.io/ezhilcharu/clienttwo4
+    environment:
+    - eureka.client.service-url.defaultZone=http://myserver:8761/eureka/
+    - eureka.instance.prefer-ip-address=true
+    ports:
+    - 8086
+    depends_on:
+    - apps
+    - server4
